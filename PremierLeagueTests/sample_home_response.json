@@ -1,0 +1,87 @@
+{
+  "teams": [
+    {
+      "id": 1,
+      "name": "Arsenal",
+      "short_name": "ARS"
+    },
+    {
+      "id": 2,
+      "name": "Aston Villa",
+      "short_name": "AVL"
+    },
+    {
+      "id": 3,
+      "name": "Bournemouth",
+      "short_name": "BOU"
+    }
+  ],
+  "elements": [
+    {
+      "id": 1,
+      "first_name": "David",
+      "second_name": "Raya Martín",
+      "web_name": "Raya",
+      "team": 1,
+      "element_type": 1,
+      "now_cost": 61,
+      "total_points": 30,
+      "status": "a"
+    },
+    {
+      "id": 2,
+      "first_name": "Kepa",
+      "second_name": "Arrizabalaga Revuelta",
+      "web_name": "Arrizabalaga",
+      "team": 1,
+      "element_type": 1,
+      "now_cost": 49,
+      "total_points": 0,
+      "status": "a"
+    },
+    {
+      "id": 3,
+      "first_name": "Illan",
+      "second_name": "Meslier",
+      "web_name": "Meslier",
+      "team": 1,
+      "element_type": 1,
+      "now_cost": 49,
+      "total_points": 0,
+      "status": "a"
+    },
+    {
+      "id": 4,
+      "first_name": "Gabriel",
+      "second_name": "dos Santos Magalhães",
+      "web_name": "Gabriel",
+      "team": 1,
+      "element_type": 2,
+      "now_cost": 80,
+      "total_points": 25,
+      "status": "a"
+    },
+    {
+      "id": 5,
+      "first_name": "Jurriën",
+      "second_name": "Timber",
+      "web_name": "J.Timber",
+      "team": 1,
+      "element_type": 2,
+      "now_cost": 65,
+      "total_points": 1,
+      "status": "a"
+    },
+    {
+      "id": 6,
+      "first_name": "William",
+      "second_name": "Saliba",
+      "web_name": "Saliba",
+      "team": 1,
+      "element_type": 2,
+      "now_cost": 59,
+      "total_points": 0,
+      "status": "i"
+    }
+  ]
+}
