@@ -1,19 +1,17 @@
 //
 //  TeamsViewBuilder.swift
-//  main
+//  PremierLeague
 //
 //  Created by Lurdhu Rupesh Kumar Pudota on 01/10/26.
 //
 
-import UIKit
+import SwiftUI
 
 struct TeamsViewBuilder {
 
-    func build() -> UIViewController {
+    func build() -> TeamsView {
         let navigator = TeamsNavigator()
         let teamsViewModel = TeamsViewModel(navigator: navigator)
-        let teamsViewController = TeamsViewController(viewModel: teamsViewModel)
-        navigator.setViewController(teamsViewController)
-        return teamsViewController
+        return TeamsView(viewModel: teamsViewModel, navigator: navigator)
     }
 }

@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct SquadPositionSection {
+struct SquadPositionSection: Identifiable, Equatable, Sendable {
+    var id: Int { positionId }
     let positionId: Int
     let title: String
     let players: [FPLPlayer]

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 // MARK: - App Theme
 enum AppTheme {
@@ -15,6 +16,9 @@ enum AppTheme {
         struct Colors {
             let background: UIColor
             let text: UIColor
+
+            var swiftUIBackground: Color { Color(uiColor: background) }
+            var swiftUIText: Color { Color(uiColor: text) }
         }
 
         private static let palette: [UIColor] = [
@@ -81,6 +85,11 @@ extension PlayerPosition {
             return .secondaryLabel
         }
     }
+
+    var badgeColor: Color { Color(uiColor: badgeBackgroundColor) }
+    var badgeForegroundColor: Color { Color(uiColor: badgeTextColor) }
+    var swiftUIBadgeBackgroundColor: Color { badgeColor }
+    var swiftUIBadgeTextColor: Color { badgeForegroundColor }
 }
 
 // MARK: - PlayerStatus Presentation Styling
@@ -98,4 +107,7 @@ extension PlayerStatus {
             return .systemGray
         }
     }
+
+    var dotColor: Color { Color(uiColor: statusDotColor) }
+    var swiftUIStatusDotColor: Color { dotColor }
 }

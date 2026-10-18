@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 import UIKit
 
 // MARK: - SquadViewModelable
@@ -14,6 +15,7 @@ protocol SquadViewModelable: AnyObject {
     var teamName: String { get }
     var numberOfSections: Int { get }
     var contentState: SquadViewState { get }
+    var sections: [SquadPositionSection] { get }
 
     var sectionsDidChange: (() -> Void)? { get set }
 
@@ -25,15 +27,17 @@ protocol SquadViewModelable: AnyObject {
 }
 
 // MARK: - SquadViewModel
-final class SquadViewModel {
+final class SquadViewModel: ObservableObject {
 
     // MARK: Dependencies
     private let team: FPLTeam
     private let dependencies: SquadViewDependable
 
     // MARK: Data
-    private(set) var searchQuery = ""
-    private var groupedSections: [SquadPositionSection] = []
+    @Published private(set) var searchQuery = ""
+    @Published private(set) var groupedSections: [SquadPositionSection] = []
+
+    var sections: [SquadPositionSection] { groupedSections }
 
     // MARK: State
     var sectionsDidChange: (() -> Void)?

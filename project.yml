@@ -1,0 +1,392 @@
+# ==============================================================================
+# XcodeGen Specification (project.yml)
+#
+# Generates the Xcode project (main.xcodeproj) deterministically from source code,
+# eliminating merge conflicts in project.pbxproj and ensuring reproducible builds
+# across team members and CI/CD pipelines.
+#
+# Usage:
+#   xcodegen generate
+# ==============================================================================
+
+# Name of the generated Xcode project (creates `main.xcodeproj`).
+# Kept as `main` to maintain consistency with the existing repository structure,
+# command-line automation, and README instructions ("Open main.xcodeproj").
+name: main
+
+# ------------------------------------------------------------------------------
+# Global Project Options
+# ------------------------------------------------------------------------------
+options:
+  # Base reverse-domain prefix applied to targets without explicit identifiers
+  bundleIdPrefix: com.premierleague
+
+  # Sets the default deployment target across all iOS targets
+  deploymentTarget:
+    iOS: "26.5"
+
+  # Aligns generated project format and defaults with Xcode 26.5 (Build 17F42)
+  xcodeVersion: "26.5"
+
+  # Mirror the filesystem folder structure as nested groups in Xcode's navigator
+  createIntermediateGroups: true
+
+  # Displays groups (folders) above source files in the project navigator for clarity
+  groupSortPosition: top
+
+# ------------------------------------------------------------------------------
+# Project-Level Build Settings
+# ------------------------------------------------------------------------------
+settings:
+  base:
+    # --------------------------------------------------------------------------
+    # Build System & Search Paths
+    # --------------------------------------------------------------------------
+    # Disables searching user paths for `#include <...>` imports. Prevents
+    # accidental include order conflicts between user and system headers.
+    ALWAYS_SEARCH_USER_PATHS: NO
+
+    # Defines the base SDK platform (iphoneos targets the iOS SDK family
+    # across physical devices and simulator architectures).
+    SDKROOT: iphoneos
+
+    # Minimum iOS version supported by the compiled binaries.
+    IPHONEOS_DEPLOYMENT_TARGET: "26.5"
+
+    # --------------------------------------------------------------------------
+    # Swift Compiler Configuration
+    # --------------------------------------------------------------------------
+    # Swift compiler language mode. Set to 5.0 for compatibility while enabling
+    # modern Swift 6 Concurrency checks via target-level flags.
+    SWIFT_VERSION: "5.0"
+
+    # --------------------------------------------------------------------------
+    # Asset Catalog & Localization
+    # --------------------------------------------------------------------------
+    # Automatically generates type-safe Swift extensions (e.g. `ColorResource`,
+    # `ImageResource`) for assets in .xcassets, eliminating stringly-typed asset lookups.
+    ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+
+    # Prefers modern Xcode String Catalogs (.xcstrings) over legacy .strings files
+    # for strongly-typed, pluralized, and state-tracked localizations.
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+
+    # --------------------------------------------------------------------------
+    # Graphics & Metal Optimization
+    # --------------------------------------------------------------------------
+    # Enables aggressive algebraic and fast reciprocal math optimizations in
+    # Metal shader compilation for high-performance rendering.
+    MTL_FAST_MATH: YES
+
+    # --------------------------------------------------------------------------
+    # Security & Sandboxing
+    # --------------------------------------------------------------------------
+    # Restricts Run Script build phases to sandboxed access only (access limited
+    # to declared input/output files and temporary directories).
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+
+    # --------------------------------------------------------------------------
+    # C / Objective-C / C++ Standards & Modules
+    # --------------------------------------------------------------------------
+    # Enables Clang semantic modules (@import syntax) to speed up compile times
+    # and isolate framework header imports.
+    CLANG_ENABLE_MODULES: YES
+
+    # Enables Automatic Reference Counting (ARC) for Objective-C and bridged C code.
+    CLANG_ENABLE_OBJC_ARC: YES
+
+    # Enables `__weak` references in Objective-C ARC code.
+    CLANG_ENABLE_OBJC_WEAK: YES
+
+    # Modern C++ dialect standard: GNU C++20 (ISO C++ 2020 standard with GNU extensions).
+    CLANG_CXX_LANGUAGE_STANDARD: "gnu++20"
+
+    # Modern C dialect standard: GNU17 (ISO C 2017 standard with GNU extensions).
+    GCC_C_LANGUAGE_STANDARD: gnu17
+
+    # Disables tentative global definitions (-fno-common), catching duplicate
+    # variable declarations at link time rather than silently merging them.
+    GCC_NO_COMMON_BLOCKS: YES
+
+    # --------------------------------------------------------------------------
+    # Clang Static Analyzer & Compiler Warnings
+    # --------------------------------------------------------------------------
+    # Warns when null pointer violations occur (passing null to nonnull parameters).
+    CLANG_ANALYZER_NONNULL: YES
+
+    # Aggressively checks for dangerous numeric object comparisons (e.g. comparing
+    # NSNumber object pointers instead of primitive numerical values).
+    CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION: YES_AGGRESSIVE
+
+    # Warns when autoreleasing pointers (e.g., `NSError **`) are captured in blocks,
+    # which can lead to premature deallocation or retain cycles.
+    CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING: YES
+
+    # Warns on suspicious boolean conversions (such as assigning integers or
+    # pointers where a boolean expression is expected).
+    CLANG_WARN_BOOL_CONVERSION: YES
+
+    # Warns about suspicious uses of the comma operator that may hide logic errors.
+    CLANG_WARN_COMMA: YES
+
+    # Warns when constant values are implicitly truncated or change value on assignment.
+    CLANG_WARN_CONSTANT_CONVERSION: YES
+
+    # Warns when an Objective-C class implements methods deprecated in its interface.
+    CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS: YES
+
+    # Treats direct access to the `isa` pointer as a compiler error, enforcing
+    # `object_getClass()` runtime calls for safety and modern runtime compatibility.
+    CLANG_WARN_DIRECT_OBJC_ISA_USAGE: YES_ERROR
+
+    # Warns about malformed documentation comments, invalid tags, or mismatched parameters.
+    CLANG_WARN_DOCUMENTATION_COMMENTS: YES
+
+    # Warns when control flow statements (if, for, while) accidentally end with
+    # a semicolon, producing an empty body.
+    CLANG_WARN_EMPTY_BODY: YES
+
+    # Warns about implicit conversions between different enumeration types.
+    CLANG_WARN_ENUM_CONVERSION: YES
+
+    # Detects and warns about recursive calls that will unconditionally recurse infinitely.
+    CLANG_WARN_INFINITE_RECURSION: YES
+
+    # Warns about implicit conversions between integer and pointer types.
+    CLANG_WARN_INT_CONVERSION: YES
+
+    # Warns when non-literal zero expressions are converted to null pointer types.
+    CLANG_WARN_NON_LITERAL_NULL_CONVERSION: YES
+
+    # Warns when `self` is implicitly captured inside a block (e.g. through ivar access),
+    # preventing accidental strong retain cycles.
+    CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF: YES
+
+    # Warns about suspicious expressions inside Objective-C container/literal literals.
+    CLANG_WARN_OBJC_LITERAL_CONVERSION: YES
+
+    # Treats declaring Objective-C classes without a superclass (missing NSObject)
+    # as a compiler error.
+    CLANG_WARN_OBJC_ROOT_CLASS: YES_ERROR
+
+    # Warns when framework public headers use quoted includes instead of angle brackets,
+    # preventing header leakage across framework module boundaries.
+    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: YES
+
+    # Warns about range-based for loops that inadvertently copy expensive objects
+    # instead of referencing them via `const &`.
+    CLANG_WARN_RANGE_LOOP_ANALYSIS: YES
+
+    # Warns when C functions are declared without complete parameter prototypes.
+    CLANG_WARN_STRICT_PROTOTYPES: YES
+
+    # Warns about suspicious `std::move` operations (moving const objects, trivially-copied
+    # types, or moved-from variables reused later).
+    CLANG_WARN_SUSPICIOUS_MOVE: YES
+
+    # Aggressively checks that APIs newer than the deployment target (26.5) are guarded
+    # by `@available` / `#available` runtime checks.
+    CLANG_WARN_UNGUARDED_AVAILABILITY: YES_AGGRESSIVE
+
+    # Warns about unreachable dead code paths following return, throw, or break.
+    CLANG_WARN_UNREACHABLE_CODE: YES
+
+    # Warns when multiple methods with identical selectors but conflicting return types
+    # or signatures exist in categories.
+    CLANG_WARN__DUPLICATE_METHOD_MATCH: YES
+
+    # Enforces strict type casting for `objc_msgSend` invocations to prevent ABI register
+    # mismatch and stack corruption.
+    ENABLE_STRICT_OBJC_MSGSEND: YES
+
+    # Warns when 64-bit integer values are implicitly narrowed to 32-bit types,
+    # preventing unintended overflow and precision loss.
+    GCC_WARN_64_TO_32_BIT_CONVERSION: YES
+
+    # Treats missing return statements in non-void functions as a compile-time error.
+    GCC_WARN_ABOUT_RETURN_TYPE: YES_ERROR
+
+    # Warns when an undeclared Objective-C selector `@selector(...)` is referenced.
+    GCC_WARN_UNDECLARED_SELECTOR: YES
+
+    # Aggressively detects and warns about automatic stack variables accessed
+    # before explicit initialization.
+    GCC_WARN_UNINITIALIZED_AUTOS: YES_AGGRESSIVE
+
+    # Warns about private/static functions that are defined but never used.
+    GCC_WARN_UNUSED_FUNCTION: YES
+
+    # Warns about declared variables that are never read, helping identify dead logic.
+    GCC_WARN_UNUSED_VARIABLE: YES
+
+  configs:
+    Debug:
+      # Emit fast DWARF debug symbols without separate dSYM generation
+      DEBUG_INFORMATION_FORMAT: dwarf
+      # Allows unit test targets to access internal symbols via `@testable import`
+      ENABLE_TESTABILITY: YES
+      # Disable optimizations for faster builds and seamless step debugging
+      GCC_DYNAMIC_NO_PIC: NO
+      GCC_OPTIMIZATION_LEVEL: 0
+      SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+      # Preprocessor flags for `#if DEBUG` macro support in both Swift and C
+      GCC_PREPROCESSOR_DEFINITIONS:
+        - "DEBUG=1"
+        - "$(inherited)"
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG $(inherited)"
+      # Include source code in Metal shaders during debugging
+      MTL_ENABLE_DEBUG_INFO: INCLUDE_SOURCE
+      # Compile only for the active simulator/device architecture to improve iteration speed
+      ONLY_ACTIVE_ARCH: YES
+
+    Release:
+      # Do not strip debug symbols during phase copying
+      COPY_PHASE_STRIP: NO
+      # Generate companion dSYM bundle for production crash report symbolication
+      DEBUG_INFORMATION_FORMAT: "dwarf-with-dsym"
+      # Disable runtime assertions in release builds to improve performance
+      ENABLE_NS_ASSERTIONS: NO
+      MTL_ENABLE_DEBUG_INFO: NO
+      # Whole Module Optimization (WMO): allows cross-file inlining and dead code elimination
+      SWIFT_COMPILATION_MODE: wholemodule
+      # Run validation checks on product bundles prior to distribution
+      VALIDATE_PRODUCT: YES
+
+# ------------------------------------------------------------------------------
+# Build Targets
+# ------------------------------------------------------------------------------
+targets:
+
+  # ----------------------------------------------------------------------------
+  # 1. Main Application Target: PremierLeague
+  # ----------------------------------------------------------------------------
+  PremierLeague:
+    type: application
+    platform: iOS
+    deploymentTarget: "26.5"
+
+    # XcodeGen traverses the directory recursively:
+    # - Swift source files -> Compile Sources build phase
+    # - PremierLeague.xcdatamodeld -> Core Data model compilation
+    # - Assets.xcassets & LaunchScreen.storyboard -> Copy Bundle Resources
+    # - Info.plist is referenced via INFOPLIST_FILE and excluded from raw resource copying
+    sources:
+      - path: PremierLeague
+
+    settings:
+      base:
+        # App identity and naming
+        PRODUCT_NAME: "$(TARGET_NAME)"
+        PRODUCT_BUNDLE_IDENTIFIER: com.premierleague.app
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: "1.0"
+        CODE_SIGN_STYLE: Automatic
+
+        # Info.plist merging: synthesizes standard keys while incorporating custom
+        # keys from PremierLeague/Info.plist (e.g. UIApplicationSceneManifest)
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_FILE: PremierLeague/Info.plist
+
+        # Asset Catalog bindings for App Icon and dynamic Accent Color palette
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        STRING_CATALOG_GENERATE_SYMBOLS: YES
+
+        # UI & Orientation Constraints
+        # Configured for portrait-only iPhone as specified in requirements & README
+        TARGETED_DEVICE_FAMILY: "1"  # 1 = iPhone
+        INFOPLIST_KEY_UILaunchStoryboardName: LaunchScreen
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown"
+        INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
+
+        # Platform restrictions: explicitly disable Catalyst and designed-for-iPad/visionOS runs
+        SUPPORTED_PLATFORMS: "iphoneos iphonesimulator"
+        SUPPORTS_MACCATALYST: NO
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+
+        # Swift 6 Concurrency & Actor Isolation flags
+        # Enforces MainActor isolation and strict concurrency adhering to Swift 6 semantics
+        SWIFT_VERSION: "5.0"
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+        SWIFT_APPROACHABLE_CONCURRENCY: YES
+        SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY: YES
+        SWIFT_EMIT_LOC_STRINGS: YES
+
+        # Dynamic loader search paths for embedded frameworks
+        LD_RUNPATH_SEARCH_PATHS:
+          - "$(inherited)"
+          - "@executable_path/Frameworks"
+
+  # ----------------------------------------------------------------------------
+  # 2. Unit Testing Target: PremierLeagueTests
+  # ----------------------------------------------------------------------------
+  PremierLeagueTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "26.5"
+
+    # Includes all unit test files, mock repositories/services, test fixtures,
+    # and sample_home_response.json bundled as a test resource
+    sources:
+      - path: PremierLeagueTests
+
+    # Establishes host dependency: XcodeGen automatically sets TestTargetID
+    dependencies:
+      - target: PremierLeague
+
+    settings:
+      base:
+        PRODUCT_NAME: "$(TARGET_NAME)"
+        PRODUCT_BUNDLE_IDENTIFIER: com.premierleague.app
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: "1.0"
+        CODE_SIGN_STYLE: Automatic
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: "26.5"
+        TARGETED_DEVICE_FAMILY: "1"
+
+        # Host Application linking: allows XCTest to inject into and test the running app
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/PremierLeague.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PremierLeague"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+
+        # Platform & architecture alignment with host app
+        SUPPORTED_PLATFORMS: "iphoneos iphonesimulator"
+        SUPPORTS_MACCATALYST: NO
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+
+        # Swift Concurrency flags
+        SWIFT_VERSION: "5.0"
+        SWIFT_APPROACHABLE_CONCURRENCY: YES
+        SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY: YES
+
+        # Disable symbol extraction and string catalog exports for test bundles
+        STRING_CATALOG_GENERATE_SYMBOLS: NO
+        SWIFT_EMIT_LOC_STRINGS: NO
+
+# ------------------------------------------------------------------------------
+# Xcode Schemes
+# ------------------------------------------------------------------------------
+schemes:
+
+  # Unified shared scheme for development, testing, and archiving.
+  # Running "Cmd + U" in Xcode or `xcodebuild test -scheme PremierLeague` runs the
+  # full PremierLeagueTests suite against the PremierLeague host target.
+  PremierLeague:
+    build:
+      targets:
+        PremierLeague: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - PremierLeagueTests
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
