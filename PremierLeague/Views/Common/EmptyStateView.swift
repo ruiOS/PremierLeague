@@ -5,106 +5,63 @@
 //  Created by Lurdhu Rupesh Kumar Pudota on 30/09/26.
 //
 
-import UIKit
+import SwiftUI
 
 // MARK: - Empty State View
-final class EmptyStateView: UIView {
+struct EmptyStateView: View {
 
-    // MARK: Callback
-    var onRetry: (() -> Void)?
+    // MARK: Properties
+    let icon: String
+    let title: String
+    let message: String
+    var showRetry: Bool = false
+    var onRetry: (() -> Void)? = nil
 
-    // MARK: UI
-    private let iconImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        iv.contentMode = .scaleAspectFit
-        iv.tintColor = .tertiaryLabel
-        return iv
-    }()
+    // MARK: Body
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 52, weight: .light))
+                .foregroundColor(Color(uiColor: .tertiaryLabel))
+                .frame(width: 72, height: 72)
+                .padding(.bottom, 8)
 
-    private let titleLabel: UILabel = {
-        let l = UILabel()
-        l.translatesAutoresizingMaskIntoConstraints = false
-        l.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
-        l.textColor = .secondaryLabel
-        l.textAlignment = .center
-        l.numberOfLines = 0
-        return l
-    }()
+            Text(title)
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundColor(Color(uiColor: .secondaryLabel))
+                .multilineTextAlignment(.center)
 
-    private let messageLabel: UILabel = {
-        let l = UILabel()
-        l.translatesAutoresizingMaskIntoConstraints = false
-        l.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        l.textColor = .tertiaryLabel
-        l.textAlignment = .center
-        l.numberOfLines = 0
-        return l
-    }()
+            Text(message)
+                .font(.system(size: 15, weight: .regular))
+                .foregroundColor(Color(uiColor: .tertiaryLabel))
+                .multilineTextAlignment(.center)
+                .padding(.bottom, showRetry ? 8 : 0)
 
-    private let retryButton: UIButton = {
-        var config = UIButton.Configuration.filled()
-        config.title = "Try Again"
-        config.cornerStyle = .capsule
-        config.baseBackgroundColor = UIColor(red: 0.24, green: 0.0, blue: 0.54, alpha: 1)
-        config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 24, bottom: 12, trailing: 24)
-        let btn = UIButton(configuration: config)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        return btn
-    }()
-
-    private let stackView: UIStackView = {
-        let sv = UIStackView()
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.axis = .vertical
-        sv.alignment = .center
-        sv.spacing = 12
-        return sv
-    }()
-
-    // MARK: Init
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupUI()
+            if showRetry {
+                Button {
+                    onRetry?()
+                } label: {
+                    Text("Try Again")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 24)
+                        .background(Color(red: 0.24, green: 0.0, blue: 0.54))
+                        .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.horizontal, 32)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
+}
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) not implemented") }
-
-    // MARK: Setup
-    private func setupUI() {
-        stackView.addArrangedSubview(iconImageView)
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(messageLabel)
-        stackView.addArrangedSubview(retryButton)
-        stackView.setCustomSpacing(20, after: iconImageView)
-        stackView.setCustomSpacing(20, after: messageLabel)
-        addSubview(stackView)
-
-        retryButton.addTarget(self, action: #selector(retryTapped), for: .touchUpInside)
-
-        let iconImageSize: CGFloat = 72
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-
-            iconImageView.widthAnchor.constraint(equalToConstant: iconImageSize),
-            iconImageView.heightAnchor.constraint(equalToConstant: iconImageSize),
-        ])
-    }
-
-    // MARK: Configuration
-    func configure(icon: String, title: String, message: String, showRetry: Bool) {
-        let config = UIImage.SymbolConfiguration(pointSize: 52, weight: .light)
-        iconImageView.image = UIImage(systemName: icon, withConfiguration: config)
-        titleLabel.text = title
-        messageLabel.text = message
-        retryButton.isHidden = !showRetry
-    }
-
-    // MARK: Actions
-    @objc private func retryTapped() {
-        onRetry?()
-    }
+#Preview {
+    EmptyStateView(
+        icon: "wifi.slash",
+        title: "Unable to Load",
+        message: "No network connection. Showing cached data.",
+        showRetry: true
+    )
 }

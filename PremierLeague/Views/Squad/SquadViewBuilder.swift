@@ -1,17 +1,16 @@
 //
 //  SquadViewBuilder.swift
-//  main
+//  PremierLeague
 //
 //  Created by Lurdhu Rupesh Kumar Pudota on 01/10/26.
 //
 
-import UIKit
+import SwiftUI
 
 struct SquadViewBuilder {
 
-    func build(for team: FPLTeam) -> UIViewController {
+    func build(for team: FPLTeam) -> SquadView {
         let squadVM = SquadViewModel(team: team)
-        let squadVC = SquadViewController(viewModel: squadVM)
-        return squadVC
+        return SquadView(viewModel: squadVM)
     }
 }

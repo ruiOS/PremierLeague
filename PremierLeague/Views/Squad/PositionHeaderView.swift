@@ -5,77 +5,37 @@
 //  Created by Lurdhu Rupesh Kumar Pudota on 30/09/26.
 //
 
-import UIKit
+import SwiftUI
 
 // MARK: - Position Section Header View
-final class PositionHeaderView: UITableViewHeaderFooterView {
+struct PositionHeaderView: View {
 
-    static let reuseIdentifier = "PositionHeaderView"
+    let title: String
+    let count: Int
 
-    // MARK: UI
-    private let titleLabel: UILabel = {
-        let l = UILabel()
-        l.translatesAutoresizingMaskIntoConstraints = false
-        l.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
-        l.textColor = .secondaryLabel
-        return l
-    }()
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 8) {
+                Text(title.uppercased())
+                    .font(.system(size: 13, weight: .heavy))
+                    .foregroundColor(Color(uiColor: .secondaryLabel))
 
-    private let countLabel: UILabel = {
-        let l = UILabel()
-        l.translatesAutoresizingMaskIntoConstraints = false
-        l.font = UIFont.systemFont(ofSize: 12, weight: .regular)
-        l.textColor = .tertiaryLabel
-        return l
-    }()
+                Text("(\(count))")
+                    .font(.system(size: 12, weight: .regular))
+                    .foregroundColor(Color(uiColor: .tertiaryLabel))
 
-    private let separator: UIView = {
-        let v = UIView()
-        v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = .separator
-        return v
-    }()
+                Spacer()
+            }
+            .frame(height: 38)
+            .padding(.horizontal, 16)
 
-    // MARK: - Initialiser
-
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
-        setupUI()
+            Divider()
+                .padding(.horizontal, 16)
+        }
+        .background(Color(uiColor: .systemGroupedBackground))
     }
+}
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) not implemented") }
-
-    // MARK: - Setup
-
-    private func setupUI() {
-        contentView.backgroundColor = .systemGroupedBackground
-
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(countLabel)
-        contentView.addSubview(separator)
-
-        let heightConstraint = contentView.heightAnchor.constraint(equalToConstant: 38)
-        heightConstraint.priority = .defaultHigh
-
-        NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-
-            countLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 8),
-            countLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-
-            separator.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            separator.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            separator.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            separator.heightAnchor.constraint(equalToConstant: 0.5),
-
-            heightConstraint,
-        ])
-    }
-
-    // MARK: Configuration
-    func configure(title: String, count: Int) {
-        titleLabel.text = title.uppercased()
-        countLabel.text = "(\(count))"
-    }
+#Preview {
+    PositionHeaderView(title: "Defenders", count: 8)
 }

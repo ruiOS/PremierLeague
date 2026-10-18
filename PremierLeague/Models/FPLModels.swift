@@ -30,7 +30,7 @@ nonisolated struct FPLBootstrapResponse: Codable, Sendable {
 }
 
 // MARK: - Team
-nonisolated struct FPLTeam: Codable, Equatable, Sendable {
+nonisolated struct FPLTeam: Codable, Equatable, Hashable, Identifiable, Sendable {
     let id: Int
     let name: String
     let shortName: String
@@ -45,7 +45,7 @@ nonisolated struct FPLTeam: Codable, Equatable, Sendable {
 }
 
 // MARK: - Player
-nonisolated struct FPLPlayer: Codable, Equatable, Sendable {
+nonisolated struct FPLPlayer: Codable, Equatable, Hashable, Identifiable, Sendable {
     let id: Int
     let firstName: String
     let secondName: String

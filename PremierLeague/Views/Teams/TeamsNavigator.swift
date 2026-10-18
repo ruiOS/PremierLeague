@@ -1,11 +1,12 @@
 //
 //  TeamsNavigator.swift
-//  main
+//  PremierLeague
 //
 //  Created by Lurdhu Rupesh Kumar Pudota on 01/10/26.
 //
 
-import UIKit
+import Foundation
+import Combine
 
 // MARK: - Navigation Protocol
 protocol TeamsNavigatable: AnyObject {
@@ -13,15 +14,11 @@ protocol TeamsNavigatable: AnyObject {
 }
 
 // MARK: - Navigator
-final class TeamsNavigator: TeamsNavigatable {
-    private weak var viewController: UIViewController?
+final class TeamsNavigator: ObservableObject, TeamsNavigatable {
 
-    func setViewController(_ viewController: UIViewController) {
-        self.viewController = viewController
-    }
+    @Published var selectedTeam: FPLTeam?
 
     func showSquad(for team: FPLTeam) {
-        let squadVC = SquadViewBuilder().build(for: team)
-        viewController?.navigationController?.pushViewController(squadVC, animated: true)
+        selectedTeam = team
     }
 }

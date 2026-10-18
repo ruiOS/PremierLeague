@@ -6,11 +6,14 @@
 //
 
 import Foundation
+import Combine
 
 // MARK: - TeamsViewModelable
 protocol TeamsViewModelable: AnyObject {
 
     var numberOfTeams: Int { get }
+    var allTeams: [FPLTeam] { get }
+    var state: TeamsViewState { get }
 
     var stateDidChange: ((TeamsViewState) -> Void)? { get set }
     var contentDidChange: (() -> Void)? { get set }
@@ -22,10 +25,10 @@ protocol TeamsViewModelable: AnyObject {
 }
 
 // MARK: - TeamsViewModel
-final class TeamsViewModel {
+final class TeamsViewModel: ObservableObject {
     
     // MARK: Data
-    private var fetchedTeams: [FPLTeam] = []
+    @Published private(set) var fetchedTeams: [FPLTeam] = []
     private let dependencies: TeamsViewDependable
     private let navigator: TeamsNavigatable
 
@@ -34,7 +37,7 @@ final class TeamsViewModel {
     var contentDidChange: (() -> Void)?
     var refreshDidFail: ((NetworkCallError) -> Void)?
     
-    private(set) var state: TeamsViewState = .loading {
+    @Published private(set) var state: TeamsViewState = .loading {
         didSet { stateDidChange?(state) }
     }
 
@@ -58,6 +61,10 @@ extension TeamsViewModel: TeamsViewModelable {
 
     var numberOfTeams: Int {
         fetchedTeams.count
+    }
+
+    var allTeams: [FPLTeam] {
+        fetchedTeams
     }
 
     func team(at row: Int) -> FPLTeam {
